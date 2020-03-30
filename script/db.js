@@ -18,6 +18,11 @@ export default class DataBase {
     deleteStudent(id) {
         return ajax.delete(`${this.url}/${this.version}/students/${id}.json`);
     }
+
+    updateStudent(id, data) {
+        return ajax.put(`${this.url}/${this.version}/students/${id}.json`,
+            data);
+    }
 }
 
 //new DataBase('http://', 1)

@@ -7,9 +7,9 @@ const $deleteStudent = $('#delete-student');
 const db = new DataBase('https://frontend-lectures.firebaseio.com', 1);
 // console.log(db);
 
-db.deleteStudent('-M3SWENqcMXppikXVzLl').then(response => {
-     console.log('response', response);
-});
+// db.deleteStudent('').then(response => {
+//      console.log('response', response);
+// });
 
 db.getStudents().then(response => {
     // console.log('response', response);
@@ -42,6 +42,7 @@ $studentsList.on('click', '[data-id]', function(event) {
             $updateStudent.find(`[name="${key}"]`).val(response[key]);
         }
         
+        $updateStudent.find('[name="id"]').val(studentId);
     }); 
 });
 
@@ -65,4 +66,12 @@ $updateStudent.on('submit', function(event) {
     });
 
     // console.log(data);
+
+    db.updateStudent(data.id, data).then(response => {
+        console.log('response', response);
+
+        $studentsList
+        .find(`[data-id="${data.id}"]`)
+            .text(`${response.firstname} ${response.lastname}`);
+    });
 });

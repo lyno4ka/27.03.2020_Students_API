@@ -3,7 +3,14 @@ const ajax = {
         return fetch(endpoint).then(response => response.json());
     },
     post() {},
-    put() {},
+    put(endpoint, body) {
+        const options = {
+            method: 'PUT',
+            body: JSON.stringify(body),
+        };
+        
+        return fetch(endpoint, options).then(response => response.json());
+    },
     delete(endpoint) {
         return fetch(endpoint, { method: 'DELETE' }).then(response => response.json());
     }
