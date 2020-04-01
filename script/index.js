@@ -1,7 +1,10 @@
 import DataBase from './db.js';
+import { getFormData, addStudent } from './function.js';
+
 const $studentsList = $('#students-list');
 const $updateStudent = $('#update-student');
 const $deleteStudent = $('#delete-student');
+const $createStudent = $('#сreate-student');
 
 
 const db = new DataBase('https://frontend-lectures.firebaseio.com', 1);
@@ -12,7 +15,6 @@ const db = new DataBase('https://frontend-lectures.firebaseio.com', 1);
 // });
 
 db.getStudents().then(response => {
-    // console.log('response', response);
 
     const students = Object.entries(response).map((item) => {
         let [key, value] = item;
@@ -23,11 +25,7 @@ db.getStudents().then(response => {
     // console.log('students', students);
 
     students.forEach(student => {
-        $('<a>').text(`${student.firstname} ${student.lastname}`)
-                .addClass('list-group-item')
-                .attr({'data-id': student.id,
-                        'href': ''})
-                .appendTo($studentsList);
+        addStudent(student, $studentsList);
     });
 });
 
@@ -37,7 +35,6 @@ $studentsList.on('click', '[data-id]', function(event) {
     const studentId = $(this).data('id');
 
     db.getStudent(studentId).then(response => {
-        // console.log('response', response);
         for (let key in response) {
             $updateStudent.find(`[name="${key}"]`).val(response[key]);
         }
@@ -49,21 +46,7 @@ $studentsList.on('click', '[data-id]', function(event) {
 $updateStudent.on('submit', function(event) {
     event.preventDefault();
 
-    const elements = Array.from(this.elements);
-    // console.log(elements);
-
-    const data = {};
-    elements.forEach(item => {
-        const name = $(item).attr('name');
-        if (!name) return;
-
-        const value = $(item).val();
-
-        // console.log($(item).attr('name'));
-        // console.log($(item).val());
-
-        data[name] = value;
-    });
+    const data = getFormData(this);
 
     // console.log(data);
 
@@ -73,5 +56,16 @@ $updateStudent.on('submit', function(event) {
         $studentsList
         .find(`[data-id="${data.id}"]`)
             .text(`${response.firstname} ${response.lastname}`);
+    });
+});
+
+$createStudent.on('submit', function(event) {
+    event.preventDefault();
+
+    const data = getFormData(this);
+    
+    db.createStudent(data).then(response => {
+        data.id = response.name;
+        addStudent(data, $studentsList);
     });
 });

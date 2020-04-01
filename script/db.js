@@ -23,6 +23,11 @@ export default class DataBase {
         return ajax.put(`${this.url}/${this.version}/students/${id}.json`,
             data);
     }
+
+    createStudent(data) {
+        return ajax.post(`${this.url}/${this.version}/students.json`,
+        data);
+    }
 }
 
 //new DataBase('http://', 1)
